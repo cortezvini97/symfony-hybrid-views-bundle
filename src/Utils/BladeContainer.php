@@ -32,7 +32,7 @@ class BladeContainer extends Container
      *
      * @see TokenInterface::getUser()
      */
-    protected function getUser(): ?UserInterface
+    public function getUser(): ?UserInterface
     {
         if($this->serviceLocator == null){
             throw new \LogicException('Symfony Container undefined.');
