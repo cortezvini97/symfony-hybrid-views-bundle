@@ -1,0 +1,28 @@
+parameters:
+    cortez_symfony_hybrid_views.config:
+        dir_views: '%kernel.project_dir%/%symfony_hybrid_views.dir_views%'
+        cache_dir: '%kernel.project_dir%/var/cache/%env(resolve:APP_ENV)%/%symfony_hybrid_views.cache_dir%'
+        directives_dir: '%kernel.project_dir%/%symfony_hybrid_views.directives_dir%'
+        functions_dir: '%kernel.project_dir%/%symfony_hybrid_views.functions_dir%'
+        cache: '%symfony_hybrid_views.cache%'
+
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    Cortez\SymfonyHybridViews\Command\MakeBladeDirective:
+        arguments:
+            $dir: '%kernel.project_dir%/%symfony_hybrid_views.directives_dir%'
+        tags:
+            - { name: 'console.command' }
+
+    Cortez\SymfonyHybridViews\Command\MakeBladeFunction:
+        arguments:
+            $dir: '%kernel.project_dir%/%symfony_hybrid_views.functions_dir%'
+        tags:
+            - { name: 'console.command' }
+
+    Cortez\SymfonyHybridViews\Services\SymfonyHybridViewsService:
+        arguments:
+            $configs: '%cortez_symfony_hybrid_views.config%'

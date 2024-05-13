@@ -1,0 +1,64 @@
+<?php
+
+namespace Cortez\SymfonyHybridViews\Services;
+
+use Cortez\SymfonyHybridViews\Utils\Blade;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+class SymfonyHybridViewsService
+{
+    private Blade $blade;
+    private string $dir_directives;
+    private string $functions_dir;
+
+    public function __construct(array $configs)
+    {
+        $dir_view = $configs['dir_views'];
+        $dir_cache = $configs['cache_dir'];
+        $dir_directives = $configs["directives_dir"];
+        $functions_dir = $configs["functions_dir"];
+        $this->functions_dir = $functions_dir;
+        $this->dir_directives = $dir_directives;
+        $this->blade = new Blade($dir_view, $dir_cache, $configs["cache"]);
+        $this->loadDirectives();
+    }
+
+    public function getBlade():Blade
+    {
+        return $this->blade;
+    }
+
+    public function view(string $view, array $params = [], array $services = []):string
+    {
+        require_once dirname(__DIR__, 2).DIRECTORY_SEPARATOR."autoload.php";
+        autoload($this->functions_dir, $services);
+        return $this->blade->make($view, $params)->render();
+    }
+
+    private function getCreatedDirectives()
+    {
+        $files = scandir($this->dir_directives);
+        $files = array_slice($files, 2);
+        $objs = [];
+        foreach ($files as $file)
+        {
+            $directive_name = str_replace(".php", "", $file);
+            $file_path = $this->dir_directives . DIRECTORY_SEPARATOR . $file;
+            
+            $callback = require_once $file_path;
+            
+            $objs[$directive_name] = $callback;
+        }
+
+        return $objs;
+    }
+
+    private function loadDirectives()
+    {
+        $directives = $this->getCreatedDirectives();
+
+        foreach ($directives as $name => $callback) {
+            $this->blade->directive($name, $callback);
+        }
+    }
+}
