@@ -3,6 +3,9 @@
 namespace Cortez\SymfonyHybridViews\Services;
 
 use Cortez\SymfonyHybridViews\Utils\Blade;
+use Cortez\SymfonyHybridViews\Utils\BladeContainer;
+use Symfony\Component\DependencyInjection\Argument\ServiceLocator;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SymfonyHybridViewsService
@@ -26,6 +29,12 @@ class SymfonyHybridViewsService
     public function getBlade():Blade
     {
         return $this->blade;
+    }
+
+    public function setServiceLocator(ServiceLocator $serviceLocator)
+    {
+        $blade_container = $this->blade->getBladeContainer();
+        $blade_container->setServiceLocator($serviceLocator);
     }
 
     public function view(string $view, array $params = [], array $services = []):string

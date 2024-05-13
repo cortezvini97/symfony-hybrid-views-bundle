@@ -22,7 +22,7 @@ abstract class RenderViewsController extends AbstractController
             throw new \LogicException('You cannot use the "stream" method if the cortez97/symfony_hybrid_views is not available.');
         }
 
-
+        $this->container->get("symfony_hybrid_views")->setServiceLocator($this->container);
         $result = $this->container->get("symfony_hybrid_views")->view($view, $params, $this->getAllContainerServices());
         $response = new Response();
         $response->setContent($result);

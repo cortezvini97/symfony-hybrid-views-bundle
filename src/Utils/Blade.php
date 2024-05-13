@@ -29,6 +29,16 @@ class Blade implements Factory
         $this->compiler = $this->container->get('blade.compiler');
     }
 
+
+    public function getBladeContainer():BladeContainer
+    {
+        return $this->container;
+    }
+
+    public function setContainer(BladeContainer $container)
+    {
+        $this->container = $container;
+    }
     
 
     public function make($view, $data = [], $mergeData = []): View
