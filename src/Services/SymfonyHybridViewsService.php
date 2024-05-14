@@ -13,6 +13,7 @@ class SymfonyHybridViewsService
     private Blade $blade;
     private string $dir_directives;
     private string $functions_dir;
+    private array $configs;
 
     public function __construct(array $configs)
     {
@@ -29,6 +30,16 @@ class SymfonyHybridViewsService
     public function getBlade():Blade
     {
         return $this->blade;
+    }
+
+    public function setBlade(Blade $blade)
+    {
+        $this->blade = $blade;
+    }
+
+    public function getConfigs():array
+    {
+        return $this->configs;
     }
 
     public function setServiceLocator(ServiceLocator $serviceLocator)

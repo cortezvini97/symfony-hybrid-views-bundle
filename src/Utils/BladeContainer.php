@@ -5,6 +5,8 @@ namespace Cortez\SymfonyHybridViews\Utils;
 use Closure;
 use Illuminate\Container\Container;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocator;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class BladeContainer extends Container
@@ -47,6 +49,22 @@ class BladeContainer extends Container
         }
 
         return $token->getUser();
+    }
+
+    public function getFlashes(string $name):array{
+        try {
+            $session = $this->container->get('request_stack')->getSession();
+        } catch (SessionNotFoundException $e) {
+            throw new \LogicException('You cannot use the addFlash method if sessions are disabled. Enable them in "config/packages/framework.yaml".', 0, $e);
+        }
+
+        if (!$session instanceof FlashBagAwareSessionInterface) {
+            throw new \LogicException(sprintf('You cannot use the addFlash method because class "%s" doesn\'t implement "%s".', get_debug_type($session), FlashBagAwareSessionInterface::class));
+        }
+
+        $flshes = $session->getFlashBag()->get($name);
+
+        return $flshes;
     }
 
 
