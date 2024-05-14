@@ -52,8 +52,13 @@ class BladeContainer extends Container
     }
 
     public function getFlashes(string $name):array{
+
+        if($this->serviceLocator == null){
+            throw new \LogicException('Symfony Container undefined.');
+        }
+
         try {
-            $session = $this->container->get('request_stack')->getSession();
+            $session = $this->serviceLocator->get('request_stack')->getSession();
         } catch (SessionNotFoundException $e) {
             throw new \LogicException('You cannot use the addFlash method if sessions are disabled. Enable them in "config/packages/framework.yaml".', 0, $e);
         }
