@@ -17,6 +17,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode("directives_dir")->end()
                 ->scalarNode("functions_dir")->end()
                 ->booleanNode("cache")->end()
+                ->scalarNode("encore")->end()
             ->end();
         
         return $treeBuilder;

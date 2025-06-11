@@ -5,9 +5,17 @@ namespace Cortez\SymfonyHybridViews\Controllers;
 use Cortez\SymfonyHybridViews\Services\SymfonyHybridViewsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 abstract class RenderViewsController extends AbstractController
 {
+
+    private KernelInterface $kernel;
+
+    public function __construct(KernelInterface $kernel)
+    {
+        $this->kernel = $kernel;
+    }
 
     public function view(string $view, $params = []):Response
     {
@@ -107,7 +115,9 @@ abstract class RenderViewsController extends AbstractController
             $services["web_link.http_header_serializer"] = $this->container->get("web_link.http_header_serializer");
         }
 
-
+        if(isset($this->kernel->getBundles()["WebpackEncoreBundle"])){
+            $services["WebpackEncoreBundle"] = $this->kernel->getBundles()["WebpackEncoreBundle"];
+        }
         
         return $services;
     }

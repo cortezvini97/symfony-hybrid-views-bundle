@@ -5,6 +5,7 @@ parameters:
         directives_dir: '%kernel.project_dir%/%symfony_hybrid_views.directives_dir%'
         functions_dir: '%kernel.project_dir%/%symfony_hybrid_views.functions_dir%'
         cache: '%symfony_hybrid_views.cache%'
+        encore: '%kernel.project_dir%/%symfony_hybrid_views.encore%'
 
 services:
     _defaults:

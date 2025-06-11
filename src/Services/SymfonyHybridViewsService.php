@@ -21,9 +21,11 @@ class SymfonyHybridViewsService
         $dir_cache = $configs['cache_dir'];
         $dir_directives = $configs["directives_dir"];
         $functions_dir = $configs["functions_dir"];
+        $this->configs = $configs;
         $this->functions_dir = $functions_dir;
         $this->dir_directives = $dir_directives;
         $this->blade = new Blade($dir_view, $dir_cache, $configs["cache"]);
+        $this->loadFunctions();
         $this->loadDirectives();
     }
 
@@ -55,6 +57,11 @@ class SymfonyHybridViewsService
         return $this->blade->make($view, $params)->render();
     }
 
+
+    private function loadFunctions(){
+        require_once dirname(__DIR__, 2).DIRECTORY_SEPARATOR."custom_funtions.php";
+    }
+
     private function getCreatedDirectives()
     {
         $files = scandir($this->dir_directives);
@@ -75,7 +82,10 @@ class SymfonyHybridViewsService
 
     private function loadDirectives()
     {
-        $directives = $this->getCreatedDirectives();
+        $directives_project = $this->getCreatedDirectives();
+        $directives_lib = require_once dirname(__DIR__, 2).DIRECTORY_SEPARATOR."custom_directive.php";
+
+        $directives = array_merge($directives_project, $directives_lib);
 
         foreach ($directives as $name => $callback) {
             $this->blade->directive($name, $callback);
