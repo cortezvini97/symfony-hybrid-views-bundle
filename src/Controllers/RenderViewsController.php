@@ -115,9 +115,13 @@ abstract class RenderViewsController extends AbstractController
             $services["web_link.http_header_serializer"] = $this->container->get("web_link.http_header_serializer");
         }
 
-        if(isset($this->kernel->getBundles()["WebpackEncoreBundle"])){
-            $services["WebpackEncoreBundle"] = $this->kernel->getBundles()["WebpackEncoreBundle"];
+
+        if(isset($this->kernel)){
+            if(isset($this->kernel->getBundles()["WebpackEncoreBundle"])){
+                $services["WebpackEncoreBundle"] = $this->kernel->getBundles()["WebpackEncoreBundle"];
+            }
         }
+
         
         return $services;
     }
